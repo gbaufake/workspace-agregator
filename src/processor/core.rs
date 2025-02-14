@@ -1,18 +1,20 @@
 use chrono::{DateTime, Local};
 use indicatif::{ProgressBar, ProgressStyle};
+use serde_json;
 use std::collections::{HashMap, HashSet};
 use std::fs::{self, File};
 use std::io::{self, BufWriter, Write};
 use std::path::{Path, PathBuf};
 use std::time::Instant;
 
-use crate::config::{Config, OutputType, VerbosityLevel};
+use crate::config::{Config, OutputFormat, OutputType, VerbosityLevel};
 use crate::filters::gitignore::GitignoreFilter;
 use crate::filters::patterns::{should_ignore, should_process_file};
 use crate::output::TreeOutput;
 use crate::processor::analysis::complexity::ComplexityAnalyzer;
 use crate::processor::analysis::language::LanguageDetector;
 use crate::processor::analysis::stats::StatsAnalyzer;
+use crate::processor::types::FileMetrics;
 use crate::processor::types::*;
 use crate::processor::visualization::charts::ChartGenerator;
 use crate::processor::visualization::llm::LLMGenerator;
@@ -134,21 +136,77 @@ impl FileProcessor {
         self.log(VerbosityLevel::Info, "📊 Calculating metrics...");
         self.stats_analyzer.calculate_metrics();
 
-        // Generate outputs
+        // Generate outputs based on format
         self.log(VerbosityLevel::Info, "📝 Generating outputs...");
-        for output_type in &self.config.generated_types {
-            match output_type {
-                OutputType::Workspace => self.generate_workspace()?,
-                OutputType::Files => self.generate_files_list()?,
-                OutputType::Tree => self.generate_tree()?,
-                OutputType::Summary => self.generate_summary()?,
-                OutputType::Meta => self.generate_meta()?,
-                OutputType::LLMFormat => self.generate_llm_format()?,
+        match self.config.output_format {
+            OutputFormat::Text => {
+                // Generate standard outputs
+                for output_type in &self.config.generated_types {
+                    match output_type {
+                        OutputType::Workspace => self.generate_workspace()?,
+                        OutputType::Files => self.generate_files_list()?,
+                        OutputType::Tree => self.generate_tree()?,
+                        OutputType::Summary => self.generate_summary()?,
+                        OutputType::Meta => self.generate_meta()?,
+                        OutputType::LLMFormat => self.generate_llm_format()?,
+                    }
+                }
+            }
+            OutputFormat::Enhanced => {
+                // Generate enhanced JSON output
+                self.generate_enhanced_output()?;
             }
         }
 
         // Finish up
         self.finish();
+        Ok(())
+    }
+
+    fn generate_enhanced_output(&self) -> io::Result<()> {
+        let workspace_data = {
+            let project = ProjectData {
+                timestamp: Local::now(),
+                base_directory: self.config.dir_path.to_string_lossy().to_string(),
+                total_files: self.processed_files,
+                total_size: self.total_size,
+                language_stats: self.file_stats.language_stats.clone(),
+            };
+
+            let mut files = Vec::new();
+            for (path, stats) in &self.file_stats.file_statistics {
+                files.push(FileData {
+                    path: path.to_string_lossy().to_string(),
+                    size: stats.size,
+                    lines: stats.lines,
+                    comments: stats.comments,
+                    blanks: stats.blanks,
+                    code: stats.code,
+                    complexity: stats.complexity.clone(),
+                    last_modified: stats.last_modified,
+                });
+            }
+
+            WorkspaceData {
+                project,
+                files,
+                analysis: AnalysisData {
+                    complexity_metrics: self.file_stats.complexity_metrics.clone(),
+                    total_lines: self.file_stats.total_lines,
+                    total_size: self.file_stats.total_size,
+                },
+            }
+        };
+
+        // Write JSON output
+        let output_path = self
+            .config
+            .get_output_path(&OutputType::Workspace)
+            .with_extension("json");
+
+        let file = File::create(output_path)?;
+        serde_json::to_writer_pretty(file, &workspace_data)?;
+
         Ok(())
     }
 

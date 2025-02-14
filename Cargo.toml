@@ -1,6 +1,6 @@
 [package]
 name = "workspace-aggregator"
-version = "0.4.5"
+version = "0.4.6"
 edition = "2021"
 authors = ["Guilherme Baufaker Rêgo <baufaker@protonmail.com>"]
 description = "A tool to aggregate and analyze directory contents"
@@ -21,7 +21,8 @@ sled = "0.34"
 tempfile = "3.8"
 assert_fs = "1.0"
 predicates = "3.0"
-
+structopt = "0.3"
+anyhow = "1.0"
 
 [features]
 build-info = ["vergen"]
@@ -36,3 +37,10 @@ lto = true
 codegen-units = 1
 panic = 'abort'
 strip = true
+
+
+[[bin]]
+name = "workspace-query"
+path = "src/bin/workspace-query.rs"
+
+

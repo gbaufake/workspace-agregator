@@ -38,6 +38,7 @@ pub struct Config {
     pub generated_types: HashSet<OutputType>,
     pub output_config: OutputConfig,
     pub verbosity: VerbosityLevel,
+    pub output_format: OutputFormat,
 }
 
 #[derive(Clone, Default)]
@@ -45,6 +46,18 @@ pub struct OutputConfig {
     pub output_dir: Option<PathBuf>,
     pub outputs: HashMap<OutputType, PathBuf>,
     pub use_timestamp: bool,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum OutputFormat {
+    Text,
+    Enhanced,
+}
+
+impl Default for OutputFormat {
+    fn default() -> Self {
+        OutputFormat::Text
+    }
 }
 
 impl Config {
@@ -72,6 +85,13 @@ impl Config {
             return Err(Error::new(ErrorKind::Other, "Version displayed"));
         }
 
+        // Add format parsing
+        let format = if args.contains(&"--format=enhanced".to_string()) {
+            OutputFormat::Enhanced
+        } else {
+            OutputFormat::Text
+        };
+
         let mut config = Config {
             dir_path: PathBuf::new(),
             exclude_extensions: HashSet::new(),
@@ -84,6 +104,7 @@ impl Config {
             generated_types: HashSet::new(),
             output_config: OutputConfig::default(),
             verbosity: VerbosityLevel::Info,
+            output_format: format,
         };
 
         let mut i = 1;
