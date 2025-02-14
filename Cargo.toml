@@ -1,6 +1,6 @@
 [package]
 name = "workspace-aggregator"
-version = "0.4.4"
+version = "0.4.5"
 edition = "2021"
 authors = ["Guilherme Baufaker Rêgo <baufaker@protonmail.com>"]
 description = "A tool to aggregate and analyze directory contents"

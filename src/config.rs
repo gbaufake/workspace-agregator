@@ -245,13 +245,10 @@ impl Config {
             ));
         }
 
-        // Create output directory if specified
-        if let Some(output_dir) = &config.output_config.output_dir {
-            if !output_dir.exists() {
-                std::fs::create_dir_all(output_dir)?;
-            }
+        if let Some(output_dir) = args.iter().position(|arg| arg.starts_with("--output-dir=")) {
+            let dir = args[output_dir].split('=').nth(1).unwrap_or(".");
+            config.output_config.output_dir = Some(PathBuf::from(dir));
         }
-
         // Set default generated types if none specified
         if config.generated_types.is_empty() {
             config.generated_types.insert(OutputType::Workspace);

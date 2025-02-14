@@ -153,30 +153,34 @@ impl FileProcessor {
     }
 
     fn ensure_output_directories(&self) -> io::Result<()> {
+        self.log(VerbosityLevel::Info, "📁 Setting up output directories...");
+
         // Create output directory if specified
         if let Some(output_dir) = &self.config.output_config.output_dir {
             if !output_dir.exists() {
                 self.log(
                     VerbosityLevel::Info,
-                    &format!("Creating output directory: {}", output_dir.display()),
+                    &format!("📂 Creating output directory: {}", output_dir.display()),
                 );
                 fs::create_dir_all(output_dir)?;
             }
         }
 
         // Create directories for specific output files
-        for output_path in self.config.output_config.outputs.values() {
+        for output_type in &self.config.generated_types {
+            let output_path = self.config.get_output_path(output_type);
             if let Some(parent) = output_path.parent() {
                 if !parent.exists() {
                     self.log(
                         VerbosityLevel::Info,
-                        &format!("Creating directory: {}", parent.display()),
+                        &format!("📂 Creating directory: {}", parent.display()),
                     );
                     fs::create_dir_all(parent)?;
                 }
             }
         }
 
+        self.log(VerbosityLevel::Info, "✅ Output directories ready");
         Ok(())
     }
 
