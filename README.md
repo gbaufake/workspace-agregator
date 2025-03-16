@@ -1,8 +1,8 @@
 # Workspace Aggregator
 
-\[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](https://crates.io/crates/workspace-aggregator)
-\[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-\[![Rust](https://img.shields.io/badge/rust-2021-orange.svg)](https://www.rust-lang.org)
+[![Version](https://img.shields.io/badge/version-0.3.0-blue.svg)](https://crates.io/crates/workspace-aggregator)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Rust](https://img.shields.io/badge/rust-2021-orange.svg)](https://www.rust-lang.org)
 
 > A powerful tool for analyzing, documenting, and understanding your codebase.
 
@@ -29,7 +29,7 @@
 
 ## Quick Start
 
-\```bash
+```bash
 # Install
 cargo install workspace-aggregator
 
@@ -38,78 +38,78 @@ workspace-aggregator /path/to/project
 
 # Generate all outputs
 workspace-aggregator . --generate workspace,files,tree,stats,summary,meta
-\```
+```
 
 ## Documentation
 
-- \[Installation Guide](docs/INSTALLATION.md)
-- \[Usage Guide](docs/USAGE.md)
-- \[Examples](docs/EXAMPLES.md)
-- \[Contributing](docs/CONTRIBUTING.md)
+- [Installation Guide](docs/INSTALLATION.md)
+- [Usage Guide](docs/USAGE.md)
+- [Examples](docs/EXAMPLES.md)
+- [Contributing](docs/CONTRIBUTING.md)
 
 ## Supported Output Types
 
 | Type | Description | Default Filename |
 |------|-------------|-----------------|
-| \`workspace\` | Aggregated file contents | \`workspace_YYYYMMDD_HHMMSS.txt\` |
-| \`files\` | List of processed files | \`files_YYYYMMDD_HHMMSS.txt\` |
-| \`tree\` | Directory structure | \`tree_YYYYMMDD_HHMMSS.txt\` |
-| \`stats\` | Detailed statistics | \`stats_YYYYMMDD_HHMMSS.txt\` |
-| \`summary\` | Project overview | \`summary_YYYYMMDD_HHMMSS.txt\` |
-| \`meta\` | JSON metadata | \`meta_YYYYMMDD_HHMMSS.json\` |
+| `workspace` | Aggregated file contents | `workspace_YYYYMMDD_HHMMSS.txt` |
+| `files` | List of processed files | `files_YYYYMMDD_HHMMSS.txt` |
+| `tree` | Directory structure | `tree_YYYYMMDD_HHMMSS.txt` |
+| `stats` | Detailed statistics | `stats_YYYYMMDD_HHMMSS.txt` |
+| `summary` | Project overview | `summary_YYYYMMDD_HHMMSS.txt` |
+| `meta` | JSON metadata | `meta_YYYYMMDD_HHMMSS.json` |
 
 ## Command Options
 
 ### Output Control
-\```bash
+```bash
 --output-dir <path>              # Set output directory for all files
 --output <type>=<path>          # Set specific output file path
 --generate <type1,type2,...>    # Specify which outputs to generate
 --no-timestamp                  # Disable timestamps in filenames
-\```
+```
 
 ### Filtering Options
-\```bash
+```bash
 --exclude <ext1,ext2,...>       # Exclude file extensions
 --exclude-dir <dir1,dir2,...>   # Exclude directories
 --exclude-pattern <pattern>     # Exclude by pattern
 --respect-gitignore            # Use .gitignore rules
-\```
+```
 
 ### Display Options
-\```bash
+```bash
 --verbosity <level>            # Set verbosity (error|warn|info|debug|trace)
 --progress-style <style>       # Set progress style (simple|detailed|none)
 --quiet                       # Minimal output
 --verbose                     # Detailed output
-\```
+```
 
 ## Example Usage
 
-\```bash
+```bash
 # Generate complete documentation
-workspace-aggregator . \\
-  --generate workspace,files,tree,stats,summary,meta \\
-  --output-dir ./docs \\
+workspace-aggregator .
+  --generate workspace,files,tree,stats,summary,meta
+  --output-dir ./docs
   --verbose
 
 # Analyze specific directories
-workspace-aggregator ./src \\
-  --exclude test,spec \\
-  --exclude-dir __tests__,fixtures \\
-  --generate stats,summary \\
+workspace-aggregator ./src
+  --exclude test,spec
+  --exclude-dir __tests__,fixtures
+  --generate stats,summary
   --verbosity debug
 
 # Quick overview
-workspace-aggregator . \\
-  --generate summary,tree \\
+workspace-aggregator .
+  --generate summary,tree
   --quiet
-\```
+```
 
 ## Output Examples
 
 ### Directory Tree
-\```
+```
 project/
 ├── src/
 │   ├── main.rs
@@ -117,10 +117,10 @@ project/
 ├── tests/
 │   └── integration_tests.rs
 └── Cargo.toml
-\```
+```
 
 ### Statistics Summary
-\```
+```
 Project Statistics
 -----------------
 Total Files: 42
@@ -129,52 +129,52 @@ Languages:
   - Rust: 65%
   - Python: 20%
   - JavaScript: 15%
-\```
+```
 
 ## Supported File Types
 
 ### Programming Languages
-- Rust (\`.rs\`)
-- Python (\`.py\`)
-- JavaScript (\`.js\`, \`.jsx\`)
-- TypeScript (\`.ts\`, \`.tsx\`)
-- Java (\`.java\`)
-- C/C++ (\`.c\`, \`.cpp\`, \`.h\`, \`.hpp\`)
+- Rust (`.rs`)
+- Python (`.py`)
+- JavaScript (`.js`, `.jsx`)
+- TypeScript (`.ts`, `.tsx`)
+- Java (`.java`)
+- C/C++ (`.c`, `.cpp`, `.h`, `.hpp`)
 
 ### Web Technologies
-- HTML (\`.html\`, \`.htm\`)
-- CSS (\`.css\`, \`.scss\`, \`.sass\`)
-- SVG (\`.svg\`)
+- HTML (`.html`, `.htm`)
+- CSS (`.css`, `.scss`, `.sass`)
+- SVG (`.svg`)
 
 ### Configuration
-- JSON (\`.json\`)
-- YAML (\`.yml\`, \`.yaml\`)
-- TOML (\`.toml\`)
-- INI (\`.ini\`)
+- JSON (`.json`)
+- YAML (`.yml`, `.yaml`)
+- TOML (`.toml`)
+- INI (`.ini`)
 
 ### Documentation
-- Markdown (\`.md\`)
-- Text (\`.txt\`)
-- RST (\`.rst\`)
-- AsciiDoc (\`.adoc\`)
+- Markdown (`.md`)
+- Text (`.txt`)
+- RST (`.rst`)
+- AsciiDoc (`.adoc`)
 
 ## Contributing
 
 1. Fork the repository
-2. Create your feature branch (\`git checkout -b feature/amazing\`)
-3. Commit changes (\`git commit -am 'Add amazing feature'\`)
-4. Push to branch (\`git push origin feature/amazing\`)
+2. Create your feature branch (`git checkout -b feature/amazing`)
+3. Commit changes (`git commit -am 'Add amazing feature'`)
+4. Push to branch (`git push origin feature/amazing`)
 5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the \[LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Author
 
 **Guilherme Baufaker Rêgo**
 - 📧 Email: baufaker@protonmail.com
-- 🌟 GitHub: \[@yourusername](https://github.com/yourusername)
+- 🌟 GitHub: [@yourusername](https://github.com/yourusername)
 
 ---
 
