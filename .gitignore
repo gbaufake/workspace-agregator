@@ -3,3 +3,4 @@ workspace.txt
 docs/*
 /tests/test_data/
 /tests/test_output/
+.gititnore
